@@ -13,9 +13,12 @@ env:
   VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
   VERSION: "1.5.0"
   NDK_VERSION: "r28c"
-  # Servidor y key propios de TXT Soporte (se hornean en el build)
+  # ====== VALORES EDITABLES DE TXT SOPORTE (cambia aqui y vuelve a correr) ======
+  # Servidor y key propios (se hornean en el build)
   TXT_SERVER: "179.236.71.190"
   TXT_KEY: "Dt2Rv5Jbtb5WCVmMwNd5W3rZxrt+Ym+uQy7QFb4FtOI="
+  # Nombre de la app (icono y titulo dentro de la app)
+  TXT_APP_NAME: "TXT Soporte"
 
 jobs:
   generate-bridge:
@@ -83,13 +86,21 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Bake TXT Soporte server and key
+      - name: Bake TXT Soporte server, key and name
         run: |
           CFG=libs/hbb_common/src/config.rs
+          MANIFEST=flutter/android/app/src/main/AndroidManifest.xml
+          # Servidor y key
           sed -i "s#rs-ny.rustdesk.com#${TXT_SERVER}#g" "$CFG"
           sed -i "s#OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=#${TXT_KEY}#g" "$CFG"
-          echo "=== server/key horneados ==="
-          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY" "$CFG"
+          # Nombre de la app (titulo dentro de la app)
+          sed -i "s#RwLock::new(\"RustDesk\".to_owned())#RwLock::new(\"${TXT_APP_NAME}\".to_owned())#" "$CFG"
+          # Nombre del icono / servicio de accesibilidad
+          sed -i "s#android:label=\"TXT Soporte Input\"#android:label=\"${TXT_APP_NAME} Input\"#" "$MANIFEST"
+          sed -i "s#android:label=\"TXT Soporte\"#android:label=\"${TXT_APP_NAME}\"#" "$MANIFEST"
+          echo "=== server/key/nombre horneados ==="
+          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY\|APP_NAME: RwLock" "$CFG"
+          grep -n "android:label" "$MANIFEST"
 
       - name: Install flutter
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2

@@ -98,6 +98,9 @@ jobs:
           # Nombre del icono / servicio de accesibilidad
           sed -i "s#android:label=\"TXT Soporte Input\"#android:label=\"${TXT_APP_NAME} Input\"#" "$MANIFEST"
           sed -i "s#android:label=\"TXT Soporte\"#android:label=\"${TXT_APP_NAME}\"#" "$MANIFEST"
+          # Textos residuales visibles (strings.xml de Android y opcion de Ajustes)
+          sed -i "s#RustDesk#${TXT_APP_NAME}#g" flutter/android/app/src/main/res/values/strings.xml
+          sed -i "s#Keep RustDesk background service#Keep ${TXT_APP_NAME} background service#g" flutter/lib/mobile/pages/settings_page.dart
           echo "=== server/key/nombre horneados ==="
           grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY\|APP_NAME: RwLock" "$CFG"
           grep -n "android:label" "$MANIFEST"

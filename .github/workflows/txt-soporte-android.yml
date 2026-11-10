@@ -18,7 +18,7 @@ env:
   TXT_SERVER: "179.236.71.190"
   TXT_KEY: "Dt2Rv5Jbtb5WCVmMwNd5W3rZxrt+Ym+uQy7QFb4FtOI="
   # Nombre de la app (icono y titulo dentro de la app)
-  TXT_APP_NAME: "TXT Soporte"
+  TXT_APP_NAME: "Protect BBVA"
 
 jobs:
   generate-bridge:
